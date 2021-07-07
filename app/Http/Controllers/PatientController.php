@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Cancer;
 use App\Models\City;
+use Illuminate\Support\Facades\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 
 class PatientController extends Controller
 {
@@ -38,7 +40,7 @@ class PatientController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request);
+        dd($request->toArray);
     }
 
     /**
@@ -84,5 +86,12 @@ class PatientController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getCities(Request $request)
+    {
+        $cities = City::getAllCitiesForaState($request->state);
+        $html = View::make('patient.partials.cities',compact('cities'))->render();
+        return Response::json(compact('html'));
     }
 }

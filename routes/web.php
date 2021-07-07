@@ -21,3 +21,4 @@ use Illuminate\Support\Facades\Route;
 // Route::resource('patient',[PatientController::class, 'index']);
 
 Route::resource('patient', PatientController::class);
+Route::post('/patient/getCities',[PatientController::class,'getCities'])->name('patient.cities');

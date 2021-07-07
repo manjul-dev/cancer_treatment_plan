@@ -15,4 +15,9 @@ class City extends Model
     {
         return self::select('state')->distinct()->get();
     }
+
+    public static function getAllCitiesForaState($state)
+    {
+        return self::where('state',$state)->select('city')->get();
+    }
 }
