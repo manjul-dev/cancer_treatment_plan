@@ -10,6 +10,9 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        .error {color:red}
+    </style>    
 </head>
 
 <body>
@@ -21,13 +24,16 @@
                     <div class="form-group">
                         <label for="name">Name</label>
                         <input type="text" class="form-control" name="name" id="name" placeholder="Enter full name">
+                        <div id="name-error" class="error"></div>
                     </div>
+                    
                 </div>
-
+                
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label for="password">Password</label>
                         <input type="password" class="form-control" name="password" id="password" placeholder="Enter password">
+                        <div id="password-error" class="error"></div>
                     </div>
                 </div>
                 
@@ -35,6 +41,7 @@
                     <div class="form-group">
                         <label for="email">Email</label>
                         <input type="email" class="form-control" name="email" id="email" placeholder="Enter email">
+                        <div id="email-error" class="error"></div>
                     </div>
                 </div>
             </div>
@@ -45,6 +52,7 @@
                     <div class="form-group">
                         <label for="name">Contact</label>
                         <input type="text" class="form-control" name="phone" id="phone" placeholder="Contact number" value="">
+                        <div id="phone-error" class="error"></div>
                     </div>
                 </div>
 
@@ -57,6 +65,7 @@
                                 <option value="{{ $state->state }}">{{ $state->state }}</option>
                             @endforeach
                         </select>
+                        <div id="state-error" class="error"></div>
                     </div>
                 </div>
                 
@@ -64,6 +73,7 @@
                     <div class="form-group">
                         <label for="city">City</label>
                         <select name="city" id="city" class="form-control"></select>
+                        <div id="city-error" class="error"></div>
                     </div>
                 </div>
             </div>
@@ -73,12 +83,14 @@
                     <div class="form-group">
                         <label for="address">Address</label>
                         <textarea name="address" id="address" class="form-control"></textarea>
+                        <div id="address-error" class="error"></div>
                     </div>
                 </div>
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label for="pin">Pin Code</label>
                         <input type="text" class="form-control" name="pin" id="pin" placeholder="Enter pin code" onkeypress="return isNumber(event)" maxlength="6" minlength="6">
+                        <div id="pin-error" class="error"></div>
                     </div>
                 </div>
                 <div class="col-sm-4">
@@ -86,10 +98,11 @@
                         <label for="type">Cancer Type</label>
                         <select name="type" id="type" class="form-control">
                             <option value="">--Select--</option>
-                            @foreach ($types as $key => $type)
-                                <option value="{{ $key }}">{{ $type }}</option>
+                            @foreach ($types as $type)
+                                <option value="{{ $type }}">{{ $type }}</option>
                             @endforeach
                         </select>
+                        <div id="type-error" class="error"></div>
                     </div>
                 </div>
             </div>
@@ -99,6 +112,7 @@
                     <div class="form group">
                         <label for="attachments">Documents</label>
                         <input type="file" name="attachment[]" id="attachment" multiple>
+                        <div id="attachment-error" class="error"></div>
                     </div>
                 </div>
             </div>
@@ -206,7 +220,8 @@
             },
             phone: {
                 required: true,
-                regex: /^(?:(?:\+|0{0,2})91(\s*[\ -]\s*)?|[0]?)?[789]\d{9}|(\d[ -]?){10}\d$/
+                // regex: /^(?:(?:\+|0{0,2})91(\s*[\ -]\s*)?|[0]?)?[789]\d{9}|(\d[ -]?){10}\d$/,
+                regex: /^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[123456789]\d{9}$/
             },
             state: {
                 required: true
@@ -231,8 +246,8 @@
             }
         },
         submitHandler: function (form) {
-            let formData = new FormData("$(#store)")[0];
-            let url = $("store").data('url');
+            let formData = new FormData($('#store')[0]);
+            let url = $("#store").data('url');
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -243,18 +258,34 @@
                 url: url,
                 type: "POST",
                 data: formData,
+                processData: false,
+                contentType: false,
                 beforeSend(){
                     $.LoadingOverlay('show');
                 },
-                submit(response){
+                success(response){
                     $.LoadingOverlay('hide');
                     console.log(response);
                 },
-                error() {
+                error(error) {
+                    showErrors(error)
                     $.LoadingOverlay('hide');
                 }
             })
         }
     });
+
+    function showErrors(error) {
+        let errors = error.responseJSON.errors
+        
+
+
+
+        for(let key in errors)
+        {
+            let errorDiv = $(`#${key}-error`);
+            errorDiv.html(errors[key][0]);
+        }        
+    }
 </script>
 </html>

@@ -20,6 +20,13 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'phone',
+        'state',
+        'city',
+        'address',
+        'pin',
+        'type',
+        'attachment',
     ];
 
     /**
@@ -39,5 +46,19 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'attachment' => 'array',
     ];
+
+    public static function saveAttachment($file,$key)
+    {
+        $destinationPath = "uploads/customerData/";
+        $fileName = $file->getClientOriginalName().time().$key;
+        $ext = $file->extension();
+        $fileName = $fileName.'.'.$ext;
+        $upload = $file->move($destinationPath, $fileName);
+        if ($upload) {
+            return $fileName;
+        }
+        return false;
+    }
 }

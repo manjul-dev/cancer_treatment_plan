@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePatientData;
 use App\Models\Cancer;
 use App\Models\City;
+use App\Models\User;
 use Illuminate\Support\Facades\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Response;
 
 class PatientController extends Controller
@@ -38,9 +41,23 @@ class PatientController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StorePatientData $request)
     {
-        dd($request->toArray);
+        try {
+            $data = $request->all();
+            foreach ($request->file('attachment') as $key => $file) {
+                $fName = User::saveAttachment($file, $key);                
+                $attachment[] = $fName;                
+            }
+            $data['attachment'] = $attachment;
+            $data['password'] = Hash::make($data['password']);
+            User::create($data);
+            return $this->showMessage('success', 'Details added successfully', 200);
+            
+        } catch (\Exception $e) {
+            
+            return $this->showMessage('failure','Something went wrong', 500);
+        }
     }
 
     /**
@@ -93,5 +110,13 @@ class PatientController extends Controller
         $cities = City::getAllCitiesForaState($request->state);
         $html = View::make('patient.partials.cities',compact('cities'))->render();
         return Response::json(compact('html'));
+    }
+
+    public function showMessage($status, $message, $statusCode)
+    {
+        return response()->json([
+            'status' => $status,
+            'message' => $message
+        ], $statusCode);
     }
 }

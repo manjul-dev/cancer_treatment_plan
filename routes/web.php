@@ -20,5 +20,9 @@ use Illuminate\Support\Facades\Route;
 
 // Route::resource('patient',[PatientController::class, 'index']);
 
-Route::resource('patient', PatientController::class);
-Route::post('/patient/getCities',[PatientController::class,'getCities'])->name('patient.cities');
+
+Route::group(['middleware'=> ['XSS']], function(){
+    Route::redirect('/','/patient');
+    Route::resource('patient', PatientController::class);
+    Route::post('/patient/getCities',[PatientController::class,'getCities'])->name('patient.cities');
+});
