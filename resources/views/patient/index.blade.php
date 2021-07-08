@@ -44,7 +44,7 @@
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label for="name">Contact</label>
-                        <input type="text" class="form-control" name="phone" id="phone" placeholder="Phone no: +91/0 1234567890" value="">
+                        <input type="text" class="form-control" name="phone" id="phone" placeholder="Contact number" value="">
                     </div>
                 </div>
 
@@ -98,7 +98,7 @@
                 <div class="col-sm-4">
                     <div class="form group">
                         <label for="attachments">Documents</label>
-                        <input type="file" name="attachment" id="attachment" multiple>
+                        <input type="file" name="attachment[]" id="attachment" multiple>
                     </div>
                 </div>
             </div>
@@ -120,6 +120,8 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/additional-methods.min.js"></script>
 </body>
 
 <script>
@@ -162,5 +164,97 @@
         }
 
     }
+    $.validator.addMethod(
+        "regex",
+        function(value, element, regex)
+        {
+            var re = new RegExp(regex);
+            return this.optional(element) || re.test(value);
+        },
+        "Not a valid pattern"
+    );
+
+    $.validator.addMethod(
+        'fileSize',
+        function(value, el)
+        {
+            let files = $(`#${el.id}`)[0].files;
+            let error = 0;
+            for (let i= 0; i < files.length; i++)
+            {
+                let size = (files[i].size/ 1024);
+                if (size > 10240) {
+                    error++;
+                }    
+            }
+            return (error === 0);
+        },
+        'File size cannot be greator than 10 MB'
+    );
+    // save form after validation
+    $("#store").validate({
+        rules: {
+            name: {
+                required: true
+            },
+            password: {
+                required: true
+            },
+            email: {
+                required: true,
+                email: true
+            },
+            phone: {
+                required: true,
+                regex: /^(?:(?:\+|0{0,2})91(\s*[\ -]\s*)?|[0]?)?[789]\d{9}|(\d[ -]?){10}\d$/
+            },
+            state: {
+                required: true
+            },
+            city: {
+                required: true
+            },
+            address: {
+                required: true
+            },
+            pin: {
+                required: true,
+                regex: /^[1-9][0-9]{5}$/
+            },
+            type: {
+                required: true
+            },
+            'attachment[]': {
+                required: true,
+                extension: 'jpg|jpeg|mp4|pdf|JPG|JPEG|MP4|PDF',
+                fileSize: true
+            }
+        },
+        submitHandler: function (form) {
+            let formData = new FormData("$(#store)")[0];
+            let url = $("store").data('url');
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: formData,
+                beforeSend(){
+                    $.LoadingOverlay('show');
+                },
+                submit(response){
+                    $.LoadingOverlay('hide');
+                    console.log(response);
+                },
+                error() {
+                    $.LoadingOverlay('hide');
+                }
+            })
+        }
+    });
 </script>
 </html>
