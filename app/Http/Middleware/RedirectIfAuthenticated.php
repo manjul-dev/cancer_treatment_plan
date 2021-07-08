@@ -20,9 +20,13 @@ class RedirectIfAuthenticated
     public function handle(Request $request, Closure $next, ...$guards)
     {
         $guards = empty($guards) ? [null] : $guards;
-
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
+                foreach (config('auth.guards') as $key => $value) {
+                    if ($key == $guard && array_key_exists('redirectTo',$value)) {                        
+                        return redirect($value['redirectTo']);
+                    }
+                }
                 return redirect(RouteServiceProvider::HOME);
             }
         }
