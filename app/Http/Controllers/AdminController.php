@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cancer;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -18,7 +19,6 @@ class AdminController extends Controller
      */
     public function index()
     {
-        dd(auth()->user());
         return view('admin.index');
     }
 
@@ -87,4 +87,27 @@ class AdminController extends Controller
     {
         //
     }
+
+    public function createCancerType()
+    {
+        return view('admin.cancer.create');
+    }
+
+    public function storeCancerType(Request $request)
+    {        
+        $request->validate([
+            'type' => 'required|unique:cancers'
+        ]);    
+        Cancer::create($request->all());
+        return $this->showMessage('success','Cancer Type added successfully',200);        
+    }
+
+    public function showMessage($status, $message, $statusCode)
+    {
+        return response()->json([
+            'status' => $status,
+            'message' => $message
+        ], $statusCode);
+    }
+    
 }

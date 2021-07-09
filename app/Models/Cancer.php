@@ -9,6 +9,7 @@ class Cancer extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['type'];
 
     public static function getTypes()
     {

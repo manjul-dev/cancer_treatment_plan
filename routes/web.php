@@ -36,4 +36,6 @@ Route::prefix('admin')->as('admin.')->group(function() {
     Route::get('login',[AdminLoginController::class,'showLoginForm'])->name('login');
     Route::post('login',[AdminLoginController::class,'login']);
     Route::resource('/',AdminController::class);
+    Route::get('/cancer',[AdminController::class,'createCancerType'])->name('cancer.index');
+    Route::post('/cancer',[AdminController::class,'storeCancerType'])->name('cancer.store');
 });

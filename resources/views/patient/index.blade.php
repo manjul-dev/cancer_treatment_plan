@@ -277,10 +277,6 @@
 
     function showErrors(error) {
         let errors = error.responseJSON.errors
-        
-
-
-
         for(let key in errors)
         {
             let errorDiv = $(`#${key}-error`);
