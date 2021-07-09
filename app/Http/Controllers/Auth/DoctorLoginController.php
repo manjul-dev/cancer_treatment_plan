@@ -7,7 +7,7 @@ use App\Http\Controllers\Auth\LoginController as  DefaultLoginController;
 
 class DoctorLoginController extends DefaultLoginController
 {
-    protected $redirectTo = '/doctor/index';
+    protected $redirectTo = '/doctor';
 
     public function __construct()
     {
@@ -16,12 +16,12 @@ class DoctorLoginController extends DefaultLoginController
     
     public function showLoginForm()
     {
-        return view('auth.login.doctor');
+        return view('auth.doctor');
     }
     
     public function username()
     {
-        return 'name';
+        return 'email';
     }
     
     protected function guard()

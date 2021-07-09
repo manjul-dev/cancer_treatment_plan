@@ -20,11 +20,11 @@
 @section('js')
     <script>
         $("#cancerType").validate({
-            // rules: {
-            //     type: {
-            //         required: true
-            //     }
-            // },
+            rules: {
+                type: {
+                    required: true
+                }
+            },
             submitHandler: function (from) {
                 let formData = new FormData($('#cancerType')[0]);
                 let url = $("#cancerType").data('url');
@@ -46,9 +46,9 @@
                     success(response){
                         $.LoadingOverlay('hide');
                     },
-                    error(error) {
-                        showErrors(error);
+                    error(error) {                        
                         $.LoadingOverlay('hide');
+                        showErrors(error);
                     }
                 });
             }

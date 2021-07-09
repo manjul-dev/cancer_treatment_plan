@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendCredentialMail;
+use App\Mail\SendDoctorMail;
 use App\Models\Cancer;
+use App\Models\Doctor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class AdminController extends Controller
 {
@@ -109,5 +114,33 @@ class AdminController extends Controller
             'message' => $message
         ], $statusCode);
     }
+
+    public function createDoctor()
+    {
+        $types = Cancer::getTypes();
+        return view('admin.doctor.create',compact('types'));
+    }
+
+    public function storeDoctor(Request $request)
+    {
+        $request->validate([
+            'name' => 'bail|required',
+            'email' => 'bail|required|email|unique:doctors',
+            'specialist'  => 'bail|required|exists:cancers,type'
+        ]);
+        $password = $this->generatePassword();
+        $data = $request->all();
+        $data['password'] = Hash::make($password);
+        $create = Doctor::create($data);
+        if ($create) {
+            dispatch(new SendCredentialMail($data['email'], $password, $data['email']));
+        }
+        
+    }
     
+    public function generatePassword()
+    {
+        $data = '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcefghijklmnopqrstuvwxyz';
+        return substr(str_shuffle($data), 0, 10);
+    }
 }
