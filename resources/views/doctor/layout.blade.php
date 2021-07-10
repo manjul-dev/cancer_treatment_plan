@@ -10,13 +10,15 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.7/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href=" {{  asset('plugins/summernote/summernote-bs4.min.css') }}">
     <style>
         .error {
             color: red
         }
 
     </style>
-    <script src="{{ asset('js/custom.js') }}" defer></script>
+    {{-- <script src="{{ asset('js/custom.js') }}" defer></script> --}}
 </head>
 
 <body>
@@ -67,6 +69,8 @@
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/additional-methods.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+    <script src="{{  asset('plugins/summernote/summernote-bs4.min.js') }}"></script>
     @yield('js')
 </body>
 

@@ -46,11 +46,11 @@ Route::prefix('admin')->as('admin.')->group(function() {
     Route::post('/doctor',[AdminController::class,'storeDoctor'])->name('doctor.store');
 });
 
-Route::prefix('doctor')->as('doc.')->group(function () {
+Route::prefix('doctor')->as('doctor.')->group(function () {
+    Route::resource('/', DoctorController::class);
     Route::get('login',[DoctorLoginController::class,'showLoginForm'])->name('login');
     Route::post('login',[DoctorLoginController::class,'login']);
     Route::post('logout',[DoctorLoginController::class,'logout'])->name('logout');
-
-
-    Route::resource('/', DoctorController::class);
+    Route::get('plan',[DoctorController::class,'plan'])->name('plan');
+    Route::post('createPlan',[DoctorController::class,'createPlan'])->name('createPlan');
 });

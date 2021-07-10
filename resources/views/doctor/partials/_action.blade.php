@@ -1,0 +1,1 @@
+<a href="{{ route('doctor.plan') }}" class="btn btn-primary">Create Plan</a>

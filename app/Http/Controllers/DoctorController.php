@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
+use Yajra\DataTables\Facades\DataTables;
 
 class DoctorController extends Controller
 {
@@ -16,8 +18,15 @@ class DoctorController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->ajax())
+        {
+            $patients = User::select('name','email','city','state','phone')->get();
+            return DataTables::of($patients)->addColumn('action', function(User $user) {
+                return view('doctor.partials._action');
+            })->toJson();
+        }
         return view('doctor.index');
     }
 
@@ -85,5 +94,10 @@ class DoctorController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function plan()
+    {
+        return view('doctor.plan');
     }
 }
