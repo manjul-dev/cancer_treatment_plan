@@ -100,4 +100,9 @@ class DoctorController extends Controller
     {
         return view('doctor.plan');
     }
+
+    public function createPlan(Request $request)
+    {
+        $data = $request->all();
+    }
 }
