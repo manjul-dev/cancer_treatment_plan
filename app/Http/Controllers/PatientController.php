@@ -55,7 +55,7 @@ class PatientController extends Controller
             return $this->showMessage('success', 'Details added successfully', 200);
             
         } catch (\Exception $e) {
-            
+            echo $e->getMessage();
             return $this->showMessage('failure','Something went wrong', 500);
         }
     }

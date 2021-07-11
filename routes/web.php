@@ -51,6 +51,7 @@ Route::prefix('doctor')->as('doctor.')->group(function () {
     Route::get('login',[DoctorLoginController::class,'showLoginForm'])->name('login');
     Route::post('login',[DoctorLoginController::class,'login']);
     Route::post('logout',[DoctorLoginController::class,'logout'])->name('logout');
-    Route::get('plan',[DoctorController::class,'plan'])->name('plan');
+    Route::get('plan/{plan}',[DoctorController::class,'plan'])->name('plan');
     Route::post('createPlan',[DoctorController::class,'createPlan'])->name('createPlan');
+    Route::get('pdf',[DoctorController::class, 'pdf']);
 });

@@ -1,1 +1,1 @@
-<a href="{{ route('doctor.plan') }}" class="btn btn-primary">Create Plan</a>
+<a href="{{ route('doctor.plan', base64_encode($user->id)) }}"class="btn btn-primary">Create Plan</a>

@@ -61,6 +61,7 @@
             ignore: '.note-editor *',
             submitHandler: function (from) {
                 let formData = new FormData($('#planForm')[0]);
+                formData.append('id',`{{ $plan }}`);
                 let url = $("#planForm").data('url');
                 $.ajaxSetup({
                     headers: {

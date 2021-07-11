@@ -34,7 +34,7 @@ class StorePatientData extends FormRequest
             'address' => 'required',
             'pin' => 'required|max:6|min:6|regex:/^[1-9][0-9]{5}$/',
             'type' => 'required|exists:cancers,type',
-            'attachment.*' => 'max:10240|mime:jpeg,jpg,flv,mp4,m3u8,ts,3gp,mov,avi,wmv'
+            'attachment.*' => 'max:10240|mimes:jpeg,jpg,flv,mp4,m3u8,ts,3gp,mov,avi,wmv'
         ];
         return $rules;
     }

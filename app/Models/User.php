@@ -61,4 +61,14 @@ class User extends Authenticatable
         }
         return false;
     }
+
+    public function plans()
+    {
+        return $this->hasMany(Plan::class);
+    }
+
+    public function doctor()
+    {
+        return $this->belongsTo(Doctor::class);
+    }
 }
